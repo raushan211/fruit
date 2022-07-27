@@ -63,7 +63,7 @@ func NewFruit(c *gin.Context) {
 		return
 	}
 	result, _ := NewFruits(reqBody)
-	if result == false {
+	if !result {
 		res := gin.H{
 			"Error": "Something is wromg",
 		}
@@ -92,4 +92,45 @@ VALUES ($1)`
 		return result, err_responce
 	}
 	return result, err_responce
+}
+
+func UpdateFruit(c *gin.Context) {
+
+	reqBody := pkg.Fruits{}
+
+	err := c.Bind(&reqBody)
+
+	if err != nil {
+		res := gin.H{
+			"error": err.Error(),
+		}
+		c.JSON(http.StatusBadGateway, res)
+	}
+	SQL := `UPDATE fruit SET  fruit_name=$1 WHERE id=$2`
+
+	_, err2 := utils.DB.Exec(SQL, reqBody.FruitName, reqBody.Id)
+
+	result := true
+	if err2 != nil {
+		//log.Fatal("ERror in update: ", err2)
+		fmt.Println(err2)
+		result = false
+	}
+
+	//return true
+
+	if result == false {
+		res := gin.H{
+			"error": "Something went wrong",
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := gin.H{
+		"message": "Updated Successfully",
+	}
+	c.JSON(http.StatusOK, res)
+	return
+
 }

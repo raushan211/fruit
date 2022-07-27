@@ -8,9 +8,9 @@ import (
 
 func setupRoutes(r *gin.Engine) {
 
-	//r.POST("/add_fruit", newFruit)
+	r.POST("/add_fruit", handlers.NewFruit)
 	r.GET("/fruits", handlers.AllFruits)
 	// r.PUT("/update", updateFruit)
-	// r.DELETE("/delete", deleteFruit)
+	r.DELETE("/delete", handlers.DeleteFruit)
 
 }
